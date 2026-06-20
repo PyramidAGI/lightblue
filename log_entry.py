@@ -13,17 +13,29 @@ def ask(prompt, default=""):
     return val or default
 
 
+def strip_trailing_separators():
+    lines = LOG.read_text(encoding="utf-8").splitlines()
+    while lines and lines[-1].strip() in (";;;;;;;;", ""):
+        lines.pop()
+    LOG.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("  Joined previous cluster.\n")
+
+
 def main():
     print(f"Log entry helper -> {LOG.name}. Type 'quit' to exit.\n")
 
-    with LOG.open("a", encoding="utf-8") as f:
-        f.write(";;;;;;;;\n")
+    join = input("  Join previous cluster? (y/n) [n]: ").strip().lower()
+    if join == "y":
+        strip_trailing_separators()
+    else:
+        with LOG.open("a", encoding="utf-8") as f:
+            f.write(";;;;;;;;\n")
 
     while True:
         try:
             sentence = ask("Sentence (description)")
             role     = ask("Role (a=assertion, c=command, q=query)", "c")
-            typ      = ask("Type (stat, activity, loc, mode, rel, dyn)", "stat")
+            typ      = ask("Type (stat, activity, loc, mode, rel, dyn, problem, solution)", "stat")
             entity1  = ask("Entity 1")
             entity2  = ask("Entity 2", "")
             relation = ask("Relation / quark", "")
