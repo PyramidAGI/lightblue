@@ -3,7 +3,7 @@
 from pathlib import Path
 
 LOG = Path(__file__).with_name("log.csv")
-QUIT_WORDS = {"quit", "exit", "q"}
+QUIT_WORDS = {"quit", "exit"}
 
 
 def ask(prompt, default=""):
